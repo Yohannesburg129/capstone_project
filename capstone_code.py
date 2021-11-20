@@ -16,3 +16,6 @@ df.shape
 
 df.info()
 
+# Check all float columns
+df.select_dtypes('float64').head()
+
