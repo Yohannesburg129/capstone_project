@@ -19,3 +19,39 @@ df.info()
 # Check all float columns
 df.select_dtypes('float64').head()
 
+# Check all object columns
+df.select_dtypes('object').head()
+
+# Import datetime
+from datetime import datetime
+
+# Convert the review_date and date_flown columns from object types to datetime formats
+df['review_date'] = pd.to_datetime(df['review_date'])
+
+# Check to see whether the review_date data type has been updated to datetime
+df.info()
+
+numeric_columns = df.select_dtypes(exclude='object').columns
+categorical_columns = df.select_dtypes('object').columns
+
+# Check
+list(numeric_columns)
+
+# Check
+list(categorical_columns)
+
+df[numeric_columns].describe()
+
+# Distribution of Overall Scores
+
+plt.figure(figsize=(12,8))
+
+# Overall Score Distribution
+plt.hist(df['overall'])
+plt.xlabel('Overall Scores 1-10')
+plt.xticks()
+plt.ylabel('Frequency')
+plt.title('Distribution of Overall Scores for all Airlines')
+
+plt.show()
+
