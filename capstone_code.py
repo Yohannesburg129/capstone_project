@@ -55,3 +55,19 @@ plt.title('Distribution of Overall Scores for all Airlines')
 
 plt.show()
 
+# Plot the distribution spread for traveller_type and cabin
+
+columns = ['traveller_type','cabin']
+
+plt.subplots(1,2, figsize=(13,10))
+
+counter = 0
+
+for col in columns:
+    counter+=1
+    plt.subplot(2,2,counter)
+    df[col].value_counts().plot.bar(rot=45)
+    plt.title(columns[counter-1])
+    
+plt.tight_layout()
+plt.show()
