@@ -71,3 +71,41 @@ for col in columns:
     
 plt.tight_layout()
 plt.show()
+
+# Percentage breakdown of traveller_type
+df['traveller_type'].value_counts(normalize=True)
+
+# Percentage breakdown of cabin
+df['cabin'].value_counts(normalize=True)
+
+# Check
+df.head(10)
+
+# Drop the date_flown column
+df.drop(columns='date_flown', inplace=True)
+
+# Check to see if date_flown column has been dropped
+df.head()
+
+# Check for missing values
+df.isna().sum()
+
+df.isna().sum()/len(df)*100
+
+# Drop rows for overall, cabin, seat_comfort, cabin_service, value_for_money and recommended
+df.dropna(subset=['overall',
+                  'cabin',
+                  'seat_comfort',
+                  'cabin_service',
+                  'value_for_money',
+                  'recommended'], inplace=True)
+
+# Check the new shape
+df.shape
+
+# Updated check for missing values
+df.isna().sum()
+
+# Check percentage of missing values for remaining columns
+df.isna().sum()/len(df)*100
+
