@@ -1,4 +1,4 @@
-# Capstone Project
+# Capstone Project - Airline Customer Review
 
 Aviation has always been a passion of mine. I LOVE to travel. I love recognizing and naming all the different type of aircraft when I go to the airport to set off for my next holiday stop. I don't just focus on distinguishing between Airbus or Boeing. I go a bit deeper, like trying to see if I can tell if that Boeing 737 is an 800 or 700 model based on its winglets. I loved aviation so much that I pursued and graduated with an undergraduate degree in Aerospace Engineering, thinking I'm just one step closer to my goal of working in aviation. However it wasn't what I had expected it to be. I didn't expect Aerospace Engineering to be such a niche field, where experience mattered above all else. And it was with even greater regret that after 2 years of fruitless job searching, dead-end LinkedIn reach outs and fool-hearted belief that if I just kept applying I'd end up with an entry-level aerospace job, that I decided on a career switch. 
 
