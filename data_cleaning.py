@@ -166,3 +166,60 @@ plt.legend()
 plt.show()
 
 #### Entertainment Imputation
+df['entertainment'].median()
+
+df['entertainment'].mode()
+
+# Finding out the total number of counts for Entertainment
+df['entertainment'].value_counts()
+
+# Creating a summary dataframe of Average Score counts
+entertainment_score_df = pd.DataFrame(df['entertainment'].value_counts())
+entertainment_score_df.columns = ['Count']
+entertainment_score_df.head()
+
+# Plotting the Food_Bev Score Distribution
+plt.figure(figsize=(10,8))
+
+# Add the mode
+plt.axvline(df['entertainment'].mode()[0], color='red', label='mode')
+# Add the median
+plt.axvline(df['entertainment'].median(), color='blue', label='median')
+
+plt.bar(entertainment_score_df.index, entertainment_score_df['Count'])
+plt.xticks(entertainment_score_df.index)
+plt.xlabel('Entertainment Score', fontsize=14)
+plt.ylabel('Frequency', fontsize=14)
+plt.title('Distribution of Entertainment Scores', fontsize=10)
+plt.legend()
+plt.show()
+
+# Fill in the missing values with the median score of 3.0
+df['entertainment'] = df['entertainment'].fillna(3.0)
+
+# Updated visualizatio of the distribution Entertainment scores
+df['entertainment'].value_counts()
+
+# Creating a summary dataframe of Average Score counts
+entertainment_score_df = pd.DataFrame(df['entertainment'].value_counts())
+entertainment_score_df.columns = ['Count']
+entertainment_score_df.head()
+
+# Plotting the Food_Bev Score Distribution
+plt.figure(figsize=(10,8))
+
+# Add the mode
+plt.axvline(df['entertainment'].mode()[0], color='red', label='mode')
+# Add the median
+plt.axvline(df['entertainment'].median(), color='blue', label='median')
+
+plt.bar(entertainment_score_df.index, entertainment_score_df['Count'])
+plt.xticks(entertainment_score_df.index)
+plt.xlabel('Entertainment Score', fontsize=14)
+plt.ylabel('Frequency', fontsize=14)
+plt.title('Distribution of Entertainment Scores', fontsize=10)
+plt.legend()
+plt.show()
+
+
+#### Ground Service Imputation
