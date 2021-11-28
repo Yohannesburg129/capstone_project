@@ -109,3 +109,60 @@ df.isna().sum()
 # Check percentage of missing values for remaining columns
 df.isna().sum()/len(df)*100
 
+#### Food and Beverage Imputation
+df['food_bev'].median()
+
+df['food_bev'].mode()
+
+# Finding out the total number of counts for food and beverage
+df['food_bev'].value_counts()
+
+# Creating a summary dataframe of Average Score counts
+foodbev_score_df = pd.DataFrame(df['food_bev'].value_counts())
+foodbev_score_df.columns = ['Count']
+foodbev_score_df.head()
+
+# Plotting the Food_Bev Score Distribution
+plt.figure(figsize=(10,8))
+
+# Add the mode
+plt.axvline(df['food_bev'].mode()[0], color='red', label='mode')
+# Add the median
+plt.axvline(df['food_bev'].median(), color='blue', label='median')
+
+plt.bar(foodbev_score_df.index, foodbev_score_df['Count'])
+plt.xticks(foodbev_score_df.index)
+plt.xlabel('Food and Beverage Score', fontsize=14)
+plt.ylabel('Frequency', fontsize=14)
+plt.title('Distribution of Food and Beverage Scores', fontsize=10)
+plt.legend()
+plt.show()
+
+# Fill in the missing values with the median score of 3.0
+df['food_bev'] = df['food_bev'].fillna(3.0)
+
+# Updated visualizatio of the distribution Food and Beverage scores
+df['food_bev'].value_counts()
+
+# Creating a summary dataframe of Average Score counts
+foodbev_score_df = pd.DataFrame(df['food_bev'].value_counts())
+foodbev_score_df.columns = ['Count']
+foodbev_score_df.head()
+
+# Plotting the Food_Bev Score Distribution
+plt.figure(figsize=(10,8))
+
+# Add the mode
+plt.axvline(df['food_bev'].mode()[0], color='red', label='mode')
+# Add the median
+plt.axvline(df['food_bev'].median(), color='blue', label='median')
+
+plt.bar(foodbev_score_df.index, foodbev_score_df['Count'])
+plt.xticks(foodbev_score_df.index)
+plt.xlabel('Food and Beverage Score', fontsize=14)
+plt.ylabel('Frequency', fontsize=14)
+plt.title('Distribution of Food and Beverage Scores', fontsize=10)
+plt.legend()
+plt.show()
+
+#### Entertainment Imputation
