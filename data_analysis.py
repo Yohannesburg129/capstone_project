@@ -198,3 +198,44 @@ plt.grid()
 plt.show()
 
 
+##### Cabin Service Trend
+# Average cabin service scores per month
+me_average_cabinservice_per_month = middle_eastern_airlines.groupby(['airline',
+                                                                     'month_of_year'])['cabin_service'].agg('mean').reset_index()
+
+# Assign new column name
+me_average_cabinservice_per_month.rename(columns={'cabin_service': 'Avg Cabin Service Score'}, inplace=True)
+me_average_cabinservice_per_month
+
+# Create a plot displaying the trend of cabin service scores for Middle Eastern Airlines
+plt.figure(figsize=(13,8))
+
+sns.lineplot(data=me_average_cabinservice_per_month, x='month_of_year', y='Avg Cabin Service Score', hue='airline')
+plt.xlabel('Month', fontsize=14)
+plt.ylabel('Average Cabin Service Score', fontsize=14)
+plt.title('Middle Eastern Airline Cabin Service Score Trend by Month', fontsize=16)
+plt.grid()
+
+plt.show()
+
+
+##### Food and Beverage Trend
+# Average food/bev scores per month
+me_average_foodbev_per_month = middle_eastern_airlines.groupby(['airline', 
+                                                                'month_of_year'])['food_bev'].agg('mean').reset_index()
+
+# Assign new column name
+me_average_foodbev_per_month.rename(columns={'food_bev': 'Avg Food_Bev Score'}, inplace=True)
+me_average_foodbev_per_month
+
+# Create a plot displaying the trend of food/bev scores for Middle Eastern Airlines
+plt.figure(figsize=(13,8))
+
+sns.lineplot(data=me_average_foodbev_per_month, x='month_of_year', y='Avg Food_Bev Score', hue='airline')
+plt.xlabel('Month', fontsize=14)
+plt.ylabel('Average Food/Bev Score', fontsize=14)
+plt.title('Middle Eastern Airline Food and Beverage Score Trend by Month', fontsize=16)
+plt.grid()
+
+plt.show()
+
