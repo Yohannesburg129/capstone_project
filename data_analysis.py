@@ -91,3 +91,110 @@ plt.tight_layout()
 
 plt.show()
 
+
+# Create a dataframe for recommended airlines based on count
+recommended_per_me_airline = middle_eastern_airlines.groupby(middle_eastern_airlines['airline'])['recommended'].value_counts()
+
+# Convert to dataframe
+recommended_per_me_airline = pd.DataFrame(recommended_per_me_airline)
+
+# Create a new Count column
+recommended_per_me_airline.columns = ['Count']
+recommended_per_me_airline = recommended_per_me_airline.reset_index()
+
+# Display
+recommended_per_me_airline.head()
+
+# Pivot to get the no and yes counts on the same row
+recommended_per_me_airline = recommended_per_me_airline.pivot(index='airline', 
+                                                              columns='recommended', 
+                                                              values='Count').reset_index()
+# Display
+recommended_per_me_airline
+
+# Assign no/yes recommended variables
+no_recommended = recommended_per_me_airline['no']
+yes_recommended = recommended_per_me_airline['yes']
+
+# calculate percentage yes recommended
+recommended_per_me_airline['yes_recommend_pct'] = yes_recommended/(no_recommended+yes_recommended)*100
+recommended_per_me_airline
+
+
+# Plot yes percentage by airline
+plt.figure(figsize=(10,8))
+
+plt.barh(recommended_per_me_airline['airline'], recommended_per_me_airline['yes_recommend_pct']);
+plt.xlabel('Percentage of Yes Recommendations')
+plt.ylabel('Airline')
+plt.title('Yes Recommendation % by Middle Eastern Airline')
+plt.axvline(50, color='black', linestyle='--')
+
+plt.show()
+
+# Create a dataframe exploring the relationship between recommended and traveller type
+me_traveller_recommended = middle_eastern_airlines.groupby(['traveller_type'])['recommended'].value_counts()
+
+# Create a dataframe traveller_recommend breakdown
+me_traveller_recommended = pd.DataFrame(me_traveller_recommended)
+
+# Assign a Count column
+me_traveller_recommended.columns = ['Count']
+me_traveller_recommended = me_traveller_recommended.reset_index()
+
+# Display
+me_traveller_recommended
+
+
+# Pivot to get the positive and negative counts on the same row
+me_traveller_recommended = me_traveller_recommended.pivot(index='traveller_type', 
+                                                          columns='recommended', 
+                                                          values='Count').reset_index()
+# Display
+me_traveller_recommended
+
+
+# Assign no/yes recommended variables
+no_traveller_recommended = me_traveller_recommended['no']
+yes_traveller_recommended = me_traveller_recommended['yes']
+
+# calculate percentage yes recommended
+me_traveller_recommended['yes_recommend_pct'] = yes_traveller_recommended/(no_traveller_recommended+yes_traveller_recommended)*100
+me_traveller_recommended
+
+
+# Plot yes percentage by traveller type for Middle Eastern carriers
+plt.figure(figsize=(10,8))
+
+plt.barh(me_traveller_recommended['traveller_type'], me_traveller_recommended['yes_recommend_pct']);
+plt.xlabel('Percentage of Yes Recommendations')
+plt.ylabel('Traveller Type')
+plt.title('Yes Recommendation % by Middle Eastern Airline Traveller Type')
+plt.axvline(50, color='black', linestyle='--')
+
+plt.show()
+
+
+# Average overall scores per month
+me_average_overall_per_month = middle_eastern_airlines.groupby(['airline',
+                                                                'month_of_year'])['overall'].agg('mean').reset_index()
+
+# Assign a new column name
+me_average_overall_per_month.rename(columns={'overall': 'Avg Overall Score'}, inplace=True)
+
+# Displau
+me_average_overall_per_month
+
+
+# Create a plot comparing the trend of overall scores for Middle Eastern carriers per month
+plt.figure(figsize=(14,8))
+
+sns.lineplot(data=me_average_overall_per_month, x='month_of_year', y='Avg Overall Score', hue='airline')
+plt.xlabel('Month', fontsize=15)
+plt.ylabel('Average Overall Score', fontsize=15)
+plt.title('Midde Eastern Airline Overall Score Trend by Month', fontsize=18)
+plt.grid()
+
+plt.show()
+
+
