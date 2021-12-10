@@ -325,3 +325,149 @@ plt.show()
 
 
 ##### Emirates Analysis
+# Create a dataframe for Emirates
+emirates = df[(df['airline'] == 'Emirates')]
+emirates.head()
+
+# Average all services for Emirates 
+emirates_per_month = emirates.groupby(['airline','month_of_year'])['value_for_money',
+                                                                                'seat_comfort',
+                                                                                'cabin_service',
+                                                                                'food_bev',
+                                                                                'entertainment',
+                                                                                'ground_service'].agg('mean').reset_index()
+emirates_per_month.head()
+
+
+# Create a plot displaying the trend of all scores
+plt.figure(figsize=(13,8))
+
+sns.lineplot(data=emirates_per_month, x='month_of_year', y='value_for_money', label='Value for Money')
+sns.lineplot(data=emirates_per_month, x='month_of_year', y='seat_comfort', label='Seat Comfort')
+sns.lineplot(data=emirates_per_month, x='month_of_year', y='cabin_service', label='Cabin Service')
+sns.lineplot(data=emirates_per_month, x='month_of_year', y='food_bev', label='Food/Beverage')
+sns.lineplot(data=emirates_per_month, x='month_of_year', y='entertainment', label='Entertainment')
+sns.lineplot(data=emirates_per_month, x='month_of_year', y='ground_service', label='Ground Service')
+plt.xlabel('Month', fontsize=14)
+plt.ylabel('Average Score', fontsize=14)
+plt.title('Emirates Service Trends by Month', fontsize=16)
+plt.grid()
+plt.show()
+
+
+# Creating a summary dataframe of Average Score counts
+entertainment_score_df = pd.DataFrame(emirates['entertainment'].value_counts())
+entertainment_score_df.columns = ['Count']
+entertainment_score_df.head()
+
+# Plotting the Entertainment Score Distribution
+plt.figure(figsize=(10,6))
+
+plt.bar(entertainment_score_df.index, entertainment_score_df['Count'])
+plt.xticks(entertainment_score_df.index)
+plt.xlabel('Emirates Entertainment Score', fontsize=10)
+plt.ylabel('Frequency', fontsize=10)
+plt.title('Emirates Distribution of Entertainment Scores', fontsize=12)
+
+plt.show()
+
+
+# Creating a summary dataframe of Average Score counts
+foodbev_score_df = pd.DataFrame(emirates['food_bev'].value_counts())
+foodbev_score_df.columns = ['Count']
+foodbev_score_df.head()
+
+# Plotting the Food_Bev Score Distribution
+plt.figure(figsize=(10,6))
+
+plt.bar(foodbev_score_df.index, foodbev_score_df['Count'])
+plt.xticks(foodbev_score_df.index)
+plt.xlabel('Emirates Food/Bev Score', fontsize=10)
+plt.ylabel('Frequency', fontsize=10)
+plt.title('Emirates Distribution of Food/Bev Scores', fontsize=12)
+
+plt.show()
+
+
+# Creating a summary dataframe of Average Score counts
+cabin_service_score_df = pd.DataFrame(emirates['cabin_service'].value_counts())
+cabin_service_score_df.columns = ['Count']
+cabin_service_score_df.head()
+
+# Plotting the Cabin Service Score Distribution
+plt.figure(figsize=(10,6))
+
+plt.bar(cabin_service_score_df.index, cabin_service_score_df['Count'])
+plt.xticks(cabin_service_score_df.index)
+plt.xlabel('Emirates Cabin Service Score', fontsize=10)
+plt.ylabel('Frequency', fontsize=10)
+plt.title('Emirates Distribution of Cabin Service Scores', fontsize=12)
+
+plt.show()
+
+
+# Creating a summary dataframe of Average Score counts
+vfm_score_df = pd.DataFrame(emirates['value_for_money'].value_counts())
+vfm_score_df.columns = ['Count']
+vfm_score_df.head()
+
+# Plotting the VFM Score Distribution
+plt.figure(figsize=(10,6))
+
+plt.bar(vfm_score_df.index, vfm_score_df['Count'])
+plt.xticks(vfm_score_df.index)
+plt.xlabel('Emirates Value for Money Score', fontsize=10)
+plt.ylabel('Frequency', fontsize=10)
+plt.title('Emirates Distribution of Value for Money Scores', fontsize=12)
+
+plt.show()
+
+
+# Emirates Overall Score Distribution
+plt.figure(figsize=(10,6))
+
+plt.hist(emirates['overall'])
+plt.xlabel('Overall Scores 1-10')
+plt.xticks()
+plt.ylabel('Frequency')
+plt.title('Distribution of Overall Scores for Emirates')
+
+plt.show()
+
+
+# Create a dataframe exploring the relationship between recommended and traveller type - Emirates
+emirates_traveller_recommended = emirates.groupby(['traveller_type'])['recommended'].value_counts()
+
+emirates_traveller_recommended = pd.DataFrame(emirates_traveller_recommended)
+emirates_traveller_recommended.columns = ['Count']
+emirates_traveller_recommended = emirates_traveller_recommended.reset_index()
+emirates_traveller_recommended.head()
+
+
+# Pivot to get the yes and no counts on the same row
+emirates_traveller_recommended = emirates_traveller_recommended.pivot(index='traveller_type',
+                                                                      columns='recommended', 
+                                                                      values='Count').reset_index()
+emirates_traveller_recommended
+
+# Assign yes/no variables
+no_traveller_recommended = emirates_traveller_recommended['no']
+yes_traveller_recommended = emirates_traveller_recommended['yes']
+
+# Calculate percentage yes recommended
+emirates_traveller_recommended['yes_recommend_pct'] = yes_traveller_recommended/(no_traveller_recommended+yes_traveller_recommended)*100
+emirates_traveller_recommended
+
+
+# plot yes percentage by traveller type for Emirates
+plt.figure(figsize=(10,6))
+
+plt.barh(emirates_traveller_recommended['traveller_type'], emirates_traveller_recommended['yes_recommend_pct']);
+plt.xlabel('Percentage of Yes Recommendations')
+plt.ylabel('Traveller Type')
+plt.title('Yes Recommendation % by Traveller Type - Emirates')
+plt.axvline(50, color='black', linestyle='--')
+
+plt.show()
+
+
