@@ -471,3 +471,36 @@ plt.axvline(50, color='black', linestyle='--')
 plt.show()
 
 
+# Create a new dataframe for number of Yes Recommends per month
+emirates_yes_per_month = emirates.groupby(emirates['month_of_year'])['recommended'].value_counts()
+
+emirates_yes_per_month = pd.DataFrame(emirates_yes_per_month)
+emirates_yes_per_month.columns = ['Count']
+emirates_yes_per_month = emirates_yes_per_month.reset_index()
+emirates_yes_per_month.head()
+
+# Pivot to get the yes and no counts on the same row
+emirates_yes_per_month = emirates_yes_per_month.pivot(index='month_of_year', columns='recommended', values='Count')
+emirates_yes_per_month.head()
+
+# Calculate percentage of yes
+
+emirates_no = emirates_yes_per_month['no']
+emirates_yes = emirates_yes_per_month['yes']
+
+emirates_yes_per_month['Fraction Yes Recommend'] = emirates_yes/(emirates_no+emirates_yes)
+emirates_yes_per_month.head()
+
+# Plot the results
+plt.figure(figsize=(12,6))
+
+plt.bar(emirates_yes_per_month.index, emirates_yes_per_month['Fraction Yes Recommend'])
+plt.xticks(emirates_yes_per_month.index)
+plt.xlabel('Month', fontsize=14)
+plt.ylabel('Fraction of Yes Recommendations', fontsize=14)
+plt.title('Fraction of Yes Recommendations per Month - Emirates', fontsize=16)
+plt.axhline(0.5, color='black', linestyle='--')
+
+plt.show()
+
+
