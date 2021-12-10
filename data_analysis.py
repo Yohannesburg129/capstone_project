@@ -282,3 +282,46 @@ plt.grid()
 plt.show()
 
 
+##### Entertainment Trend
+# Average entertainment scores per month
+me_average_entertainment_per_month = middle_eastern_airlines.groupby(['airline',
+                                                                      'month_of_year'])['entertainment'].agg('mean').reset_index()
+
+# Assign new column name
+me_average_entertainment_per_month.rename(columns={'entertainment': 'Avg Entertainment Score'}, inplace=True)
+me_average_entertainment_per_month
+
+# Create a plot displaying the trend of entertainment scores for Middle Eastern Airlines
+plt.figure(figsize=(13,8))
+
+sns.lineplot(data=me_average_entertainment_per_month, x='month_of_year', y='Avg Entertainment Score', hue='airline')
+plt.xlabel('Month', fontsize=14)
+plt.ylabel('Average Entertainment Score', fontsize=14)
+plt.title('Middle Eastern Entertainment Trend by Month', fontsize=16)
+plt.grid()
+
+plt.show()
+
+
+##### Seat Comfort Trend
+# Average seat comfort scores per month
+me_average_seatcomfort_per_month = middle_eastern_airlines.groupby(['airline', 
+                                                                    'month_of_year'])['seat_comfort'].agg('mean').reset_index()
+
+# Assign new column name
+me_average_seatcomfort_per_month.rename(columns={'seat_comfort': 'Avg Seat Comfort Score'}, inplace=True)
+me_average_seatcomfort_per_month
+
+# Create a plot displaying the trend of seat comfort scores for Middle Eastern Airlines
+plt.figure(figsize=(13,8))
+
+sns.lineplot(data=me_average_seatcomfort_per_month, x='month_of_year', y='Avg Seat Comfort Score', hue='airline')
+plt.xlabel('Month', fontsize=14)
+plt.ylabel('Average Seat Comfort Score', fontsize=14)
+plt.title('Middle Eastern Airlines Seat Comfort Score Trend by Month', fontsize=16)
+plt.grid()
+
+plt.show()
+
+
+##### Emirates Analysis
