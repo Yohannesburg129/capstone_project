@@ -504,3 +504,35 @@ plt.axhline(0.5, color='black', linestyle='--')
 plt.show()
 
 
+emirates['destination'].value_counts().head(20)
+
+# Plot the top 20 destination count for Emirates
+plt.figure(figsize=(10,6))
+
+emirates['destination'].value_counts().head(20).plot(kind='bar')
+plt.xlabel('Destinations')
+plt.ylabel('Count')
+plt.title('Top 20 Destinations - Emirates')
+
+plt.show()
+
+
+# Create a dataframe where the destination == London
+df_london = emirates.loc[emirates['destination'] == 'London']
+df_london.head()
+
+df_london.shape
+
+# Create a dataframe exploring the relationship between recommended and traveller type for the London route
+emirates_london = df_london.groupby(['traveller_type'])['recommended'].value_counts()
+
+emirates_london = pd.DataFrame(emirates_london)
+emirates_london.columns = ['Count']
+emirates_london = emirates_london.reset_index()
+emirates_london.head()
+
+# Pivot to get the yes and no counts on the same row
+emirates_london = emirates_london.pivot(index='traveller_type', 
+                                        columns='recommended', 
+                                        values='Count').reset_index()
+emirates_london
