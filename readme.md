@@ -9,7 +9,7 @@ The capstone_project folder contains the following:
 - 1 readme file 
 - data_cleaning.py file. This file contains the entire data cleaning and preprocessing process before conducting EDA on the dataset.
 - data_analysis.py file. This file contains the entire data analysis process of the project
-- modelling.py file. This file contains the entire feature engineering and modelling process and findings of the project. 
+- data_modelling.py file. This file contains the entire feature engineering and modelling process and findings of the project. 
 
 SIDE NOTE: The data cleaning, analysis and modelling were all done in Jupyter Notebook. 
 
