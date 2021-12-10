@@ -239,3 +239,46 @@ plt.grid()
 
 plt.show()
 
+
+##### Ground Service Trend
+# Average ground service scores per month
+me_average_groundservice_per_month = middle_eastern_airlines.groupby(['airline',
+                                                                      'month_of_year'])['ground_service'].agg('mean').reset_index()
+
+# Assign new column name
+me_average_groundservice_per_month.rename(columns={'ground_service': 'Avg Ground Service Score'}, inplace=True)
+me_average_groundservice_per_month
+
+# Create a plot displaying the trend of ground service scores for Middle Eastern Airlines
+plt.figure(figsize=(15,8))
+
+sns.lineplot(data=me_average_groundservice_per_month, x='month_of_year', y='Avg Ground Service Score', hue='airline')
+plt.xlabel('Month', fontsize=14)
+plt.ylabel('Average Ground Service Score', fontsize=14)
+plt.title('Middle Eastern Ground Service Score Trend by Month', fontsize=18)
+plt.grid()
+
+plt.show()
+
+
+##### Value for Money Trend
+# Average value for money scores per month
+me_average_vfm_per_month = middle_eastern_airlines.groupby(['airline',
+                                                            'month_of_year'])['value_for_money'].agg('mean').reset_index()
+
+# Assign new column name
+me_average_vfm_per_month.rename(columns={'value_for_money': 'Avg Value for Money Score'}, inplace=True)
+me_average_vfm_per_month
+
+# Create a plot displaying the trend of value for money scores for Middle Eastern Airlines
+plt.figure(figsize=(15,8))
+
+sns.lineplot(data=me_average_vfm_per_month, x='month_of_year', y='Avg Value for Money Score', hue='airline')
+plt.xlabel('Month', fontsize=14)
+plt.ylabel('Average VFM Score', fontsize=14)
+plt.title('Middle Eastern VFM Score Trend by Month', fontsize=18)
+plt.grid()
+
+plt.show()
+
+
