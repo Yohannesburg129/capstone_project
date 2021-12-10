@@ -559,3 +559,30 @@ plt.show()
 
 #### Statistical Analysis - Using the Middle Eastern Airlines Dataframe
 middle_eastern_airlines.head()
+
+# Traveller Type relation with Recommended
+airline_recommend = pd.crosstab(middle_eastern_airlines['airline'], middle_eastern_airlines['recommended'])
+airline_recommend
+
+result = stats.chi2_contingency(airline_recommend)
+result
+
+# Make copy
+me_copy = middle_eastern_airlines.copy()
+me_copy.head()
+
+# Convert recommended column into binary
+me_copy['recommended'] = np.where(me_copy['recommended'] == 'yes', 1, 0)
+
+# Check
+me_copy.head()
+
+
+# Convert traveller_type and cabin to dummy variables
+me_copy = pd.get_dummies(me_copy, columns=['airline', 'traveller_type', 'cabin'], drop_first=True)
+
+# Check
+me_copy.head()
+
+
+
