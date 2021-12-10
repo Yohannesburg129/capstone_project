@@ -536,3 +536,26 @@ emirates_london = emirates_london.pivot(index='traveller_type',
                                         columns='recommended', 
                                         values='Count').reset_index()
 emirates_london
+
+# Assign yes/no variables
+no_traveller_recommended = emirates_london['no']
+yes_traveller_recommended = emirates_london['yes']
+
+# Calculate percentage yes recommended
+emirates_london['yes_recommend_pct'] = yes_traveller_recommended/(no_traveller_recommended+yes_traveller_recommended)*100
+emirates_london
+
+# plot yes percentage by traveller type for Southwest
+plt.figure(figsize=(10,6))
+
+plt.barh(emirates_london['traveller_type'], emirates_london['yes_recommend_pct']);
+plt.xlabel('Percentage of Yes Recommendations')
+plt.ylabel('Traveller Type')
+plt.title('Yes Recommendation % by Traveller Type - Emirates')
+plt.axvline(50, color='black', linestyle='--')
+
+plt.show()
+
+
+#### Statistical Analysis - Using the Middle Eastern Airlines Dataframe
+middle_eastern_airlines.head()
