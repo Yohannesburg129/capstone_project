@@ -585,4 +585,55 @@ me_copy = pd.get_dummies(me_copy, columns=['airline', 'traveller_type', 'cabin']
 me_copy.head()
 
 
+# Create the X (independent) and y (dependent) variables
+X = me_copy.drop(columns = ['customer_review', 'origin',
+                                 'destination', 'recommended'], axis=1)
+y = me_copy['recommended']
+
+plt.figure(figsize=(15,8))
+
+sns.heatmap(X.corr(), cmap='coolwarm', vmin=-1, mask=np.triu(X.corr()), annot=True, lw=1, cbar=False)
+plt.title('Correlation Heatmap of Independent Variables', fontsize=18)
+plt.tight_layout()
+
+plt.show()
+
+# Add the constant
+X_with_constant = sm.add_constant(X)
+
+# Create the model
+emirates_logit_model = sm.Logit(y, X_with_constant)
+
+# Fit the model
+emirates_logit_model = emirates_logit_model.fit()
+
+# Look at the summary
+emirates_logit_model.summary()
+
+X.drop(columns=['cabin_Premium Economy', 'year', 'week_of_year', 'day_of_month',
+               'traveller_type_Couple Leisure', 'traveller_type_Family Leisure',
+               'traveller_type_Solo Leisure'], inplace=True)
+
+# Add the constant
+X_with_constant = sm.add_constant(X)
+
+# Create the model
+emirates_logit_model = sm.Logit(y, X_with_constant)
+
+# Fit the model
+emirates_logit_model = emirates_logit_model.fit()
+
+# Look at the summary
+emirates_logit_model.summary()
+
+
+# Logistic Regression Odds Ratio
+logit_coef = pd.DataFrame(emirates_logit_model.params)
+logit_coef.columns = ['Coefficients']
+logit_coef['Odds Ratio'] = round(np.exp(emirates_logit_model.params), 5)
+logit_coef['Affect'] = np.where(logit_coef['Coefficients'] > 0, 'Positive', 'Negative')
+logit_coef.sort_values(by = 'Coefficients', ascending=False, inplace=True)
+
+logit_coef
+
 
