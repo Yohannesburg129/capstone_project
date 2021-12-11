@@ -623,4 +623,62 @@ print(classification_report(y_test, y_pred_knn))
 
 
 #### Model 4.3 - Decision Tree Classifier
+# Instantiate basic model
+dtree = DecisionTreeClassifier()
+
+# Fit and score 
+dtree.fit(X_train_scaled, y_train)
+print(f"Train Accuracy: {dtree.score(X_train_scaled, y_train)}")
+print(f"Validation Accuracy: {dtree.score(X_val_scaled, y_val)}")
+
+# Levels of splitting to test
+max_depths = [2,3,4,5,6,7,8,9,10,11,12,13,14]
+
+# Empty lists for metrics
+dtree_train_acc = []
+dtree_val_acc = []
+
+# Iterate over parameter values
+for max_depth in max_depths:
+    dtree_md = DecisionTreeClassifier(max_depth=max_depth)
+    dtree_md.fit(X_train_scaled, y_train)
+    
+    dtree_train_acc.append(dtree_md.score(X_train_scaled, y_train))
+    dtree_val_acc.append(dtree_md.score(X_val_scaled, y_val))
+    
+    print(f"Completed max_depth={max_depth}", end='\r')
+
+# Plot the figure
+plt.figure(figsize=(8,5))
+
+plt.plot(max_depths, dtree_train_acc, marker='o', label='Train Data')
+plt.plot(max_depths, dtree_val_acc, marker='o', label='Validation Data')
+plt.xlabel('Maximum Depth')
+plt.ylabel('Accuracy')
+plt.title("Model Accuracy with different 'max_depth' Values")
+plt.legend()
+plt.grid()
+plt.show()
+
+# Use the optimal max depth
+dtree2 = DecisionTreeClassifier(max_depth=5)
+
+dtree2.fit(X_train_scaled, y_train)
+
+dtree2_train_acc = dtree2.score(X_train_scaled, y_train)
+dtree2_val_acc = dtree2.score(X_val_scaled, y_val)
+dtree2_test_acc = dtree2.score(X_test_scaled, y_test)
+
+print(f"Train Accuracy: {round(dtree2_train_acc, 4)*100}%")
+print(f"Validation Accuracy: {round(dtree2_val_acc, 4)*100}%")
+print(f"Test Accuracy: {round(dtree2_test_acc, 4)*100}%")
+
+# Model predictions on test data
+y_pred_dtree = dtree2.predict(X_test_scaled)
+
+# Call confusion matrix
+plot_confusion_matrix(dtree2, X_test_scaled, y_test, cmap='viridis')
+
+print(classification_report(y_test, y_pred_dtree))
+
 
