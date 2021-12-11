@@ -682,3 +682,55 @@ plot_confusion_matrix(dtree2, X_test_scaled, y_test, cmap='viridis')
 print(classification_report(y_test, y_pred_dtree))
 
 
+#### Model 4.4 - Support Vector Machines
+# Instantiate basic model
+SVM_model = LinearSVC()
+
+# Fit and score 
+SVM_model.fit(X_train_scaled, y_train)
+print(f"Train Accuracy: {SVM_model.score(X_train_scaled, y_train)}")
+print(f"Validation Accuracy: {SVM_model.score(X_val_scaled, y_val)}")
+
+# SVM 
+c_candidates = 10**np.arange(-10.0,10.0)
+
+svm_train_acc = []
+svm_val_acc = []
+
+# Loop through
+for c in c_candidates:
+    
+    SVM_model = LinearSVC(C=c)
+    SVM_model.fit(X_train_scaled, y_train)
+    
+    svm_train_acc.append(SVM_model.score(X_train_scaled, y_train))
+    svm_val_acc.append(SVM_model.score(X_val_scaled, y_val))
+    
+plt.figure(figsize=(8,5))
+
+plt.plot(c_candidates, svm_train_acc, marker='o', label='Train Data')
+plt.plot(c_candidates, svm_val_acc, marker='o', label='Validation Data')
+plt.xlabel('C_Candidates')
+plt.ylabel('Accuracy')
+plt.title("Model Accuracy with different 'c_candidates' Values")
+plt.legend()
+plt.xscale('log')
+plt.grid()
+plt.show()
+
+# Instantiate basic model
+SVM_model = LinearSVC(random_state=42, max_iter=3000, C=0.01)
+
+# Fit and score 
+SVM_model.fit(X_train_scaled, y_train)
+print(f"Train Accuracy: {SVM_model.score(X_train_scaled, y_train)}")
+print(f"Validation Accuracy: {SVM_model.score(X_val_scaled, y_val)}")
+print(f"Test Accuracy: {SVM_model.score(X_test_scaled, y_test)}")
+
+# Model predictions on test data
+y_pred_svm = SVM_model.predict(X_test_scaled)
+
+# Call confusion matrix
+plot_confusion_matrix(SVM_model, X_test_scaled, y_test, cmap='viridis')
+
+print(classification_report(y_test, y_pred_svm))
