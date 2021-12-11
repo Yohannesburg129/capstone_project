@@ -543,4 +543,84 @@ pd.DataFrame({'3911 Dimensions': [log_reg2_train_acc, log_reg2_val_acc, log_reg2
             index = ['Train Accuracy', 'Validation Accuracy', 'Test Accuracy'])
 
 
+#### Model 4.2 - K Nearest Neighbor Classifier
+# Simple KNN with no hyperparamter optimization
+my_knn = KNeighborsClassifier()
+
+my_knn.fit(X_train_scaled, y_train)
+print(f"Training Accuracy: {my_knn.score(X_train_scaled, y_train)}")
+print(f"Validation Accuracy: {my_knn.score(X_val_scaled, y_val)}")
+
+k_values = np.arange(1, 101, 2)
+
+# Empty lists for metrics
+knn_train_acc = []
+knn_val_acc = []
+
+# Iterate over different 'k' values
+for k in k_values:
+    
+    my_knn = KNeighborsClassifier(n_neighbors=k)
+    my_knn.fit(X_train_scaled, y_train)
+    knn_train_acc.append(my_knn.score(X_train_scaled, y_train))
+    knn_val_acc.append(my_knn.score(X_val_scaled, y_val))
+    
+    print(f"{k} nearest neighbors modelled", end='\r')
+
+# Visualize relationship between 'k' and model accuracy
+plt.figure(figsize=(12,7))
+plt.plot(k_values, knn_train_acc, marker='o', label='Train Data')
+plt.plot(k_values, knn_val_acc, marker='o', label='Validation Data')
+plt.legend()
+plt.xlabel('n_neighbors (k)')
+plt.ylabel('Model Accuracy')
+plt.title('Relationship between K and Model Accuracy')
+
+plt.show()
+
+# Instantiate KNeighbors Transformer 
+knn_transformer = KNeighborsTransformer(mode='distance', n_neighbors=101)
+knn_classifier = KNeighborsClassifier(metric='precomputed')
+
+# Put in pipeline
+knn_pipeline = Pipeline([('scaler', MinMaxScaler()),
+                           ('transformer', knn_transformer),
+                           ('classifier', knn_classifier)],
+                         )
+
+# Set up the grid search
+grid_params = {'classifier__n_neighbors':k_values}
+
+# Instantiate
+my_gridsearch = GridSearchCV(knn_pipeline, grid_params, verbose=1, cv=3)
+
+# Fit
+my_gridsearch.fit(X_rem, y_rem)
+
+# Find out best parameters
+my_gridsearch.best_estimator_
+
+my_knn_optimal = KNeighborsClassifier(n_neighbors=99)
+
+my_knn_optimal.fit(X_train_scaled, y_train)
+
+knn_optimal_train = my_knn_optimal.score(X_train_scaled, y_train)
+knn_optimal_val = my_knn_optimal.score(X_val_scaled, y_val)
+knn_optimal_test = my_knn_optimal.score(X_test_scaled, y_test)
+
+print("Optimized KNN Model")
+print(f"Train Accuracy: {knn_optimal_train}")
+print(f"Validation Accuracy: {knn_optimal_val}")
+print(f"Test Accuracy: {knn_optimal_test}")
+
+# Model predictions on test data
+y_pred_knn = my_knn_optimal.predict(X_test_scaled)
+
+# Call confusion matrix
+plot_confusion_matrix(my_knn_optimal, X_test_scaled, y_test, cmap='viridis')
+
+print(classification_report(y_test, y_pred_knn))
+
+
+#### Model 4.3 - Decision Tree Classifier
 
