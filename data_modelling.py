@@ -297,3 +297,56 @@ coef_df_tfidf = coef_df_tfidf.sort_values("coefficient", ascending=False)
 # Create dataframes for the top 20 positive/negative words
 tfidf_df_pos = coef_df_tfidf.head(20)
 tfidf_df_neg = coef_df_tfidf.tail(20)
+
+
+
+### 3. Data Splitting
+# Create X and y variables
+X = me_airlines.drop(columns=['overall','seat_comfort','cabin_service','entertainment',
+                              'food_bev','ground_service','value_for_money','recommended'])
+y = me_airlines['recommended']
+
+# Creating a chunk for the 20% test set which I'll leave to the side
+X_rem, X_test, y_rem, y_test = train_test_split(X,
+                                               y,
+                                               test_size=0.2,
+                                               stratify=y,
+                                               random_state=42)
+
+# Inspect the dimensions of each data subset
+print(X_rem.shape, X_test.shape, y_rem.shape, y_test.shape)
+
+# Instantiate vectorizer
+bagofwords = CountVectorizer(stop_words="english",
+                            min_df=10,
+                            max_features=3000,
+                            ngram_range=(1,3))
+
+# Fit vectorizer
+bagofwords.fit(X_rem['customer_review'])
+
+# Transform text
+rem_transformed = bagofwords.transform(X_rem['customer_review'])
+rem_transformed
+rem_transformed.toarray()
+
+# Transform the text of the test subset
+test_transformed = bagofwords.transform(X_test['customer_review'])
+test_transformed
+
+# Convert the sparse matrix to dense for the remainder subset
+customer_review_rem_df = pd.DataFrame(columns=bagofwords.get_feature_names(),
+                                     data=rem_transformed.toarray())
+
+customer_review_rem_df
+
+# Convert the sparse matrix to dense for the test subset
+customer_review_test_df = pd.DataFrame(columns=bagofwords.get_feature_names(),
+                                     data=test_transformed.toarray())
+
+customer_review_test_df
+
+X_rem = pd.concat([X_rem, customer_review_rem_df.set_index(X_rem.index)], axis=1)
+
+# Check
+X_rem.head()
