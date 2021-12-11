@@ -92,3 +92,26 @@ me_airlines.drop(columns='airline', inplace=True)
 
 # Check
 me_airlines.head()
+
+
+#### `traveller_type`
+# Fit the OneHotEncoder to the bookings column and transform
+me_traveller_df = pd.DataFrame(me_airlines['traveller_type'])
+ohe_me_traveller_df = ohe.fit_transform(me_traveller_df)
+
+ohe_me_traveller_df
+
+# Convert the sparse matrix to a dense matrix
+ohe_me_traveller_dense = ohe_me_traveller_df.toarray()
+
+me_traveller_df = pd.DataFrame(ohe_me_traveller_dense, columns=ohe.categories_[0]).astype('int')
+
+# Inspect
+me_traveller_df.head()
+
+#Add data_frames together
+me_airlines = pd.concat([me_airlines, me_traveller_df.set_index(me_airlines.index)], axis=1)
+me_airlines.drop(columns='traveller_type', inplace=True)
+# Check
+me_airlines.head(2)
+
