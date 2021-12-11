@@ -350,3 +350,53 @@ X_rem = pd.concat([X_rem, customer_review_rem_df.set_index(X_rem.index)], axis=1
 
 # Check
 X_rem.head()
+
+# Drop the customer review column
+X_rem.drop(columns='customer_review', inplace=True)
+X_rem.head()
+X_test = pd.concat([X_test, customer_review_test_df.set_index(X_test.index)], axis=1)
+
+# Drop customer review column
+X_test.drop(columns='customer_review', inplace=True)
+
+# Check
+X_test.head()
+
+# Visualize the 30 most common tokens 
+words = bagofwords.get_feature_names()
+word_counts = rem_transformed.toarray().sum(axis=0)
+
+X_rem_df = pd.DataFrame({"token": words,
+                        "occurrences": word_counts})
+
+X_rem_df_sorted = X_rem_df.sort_values("occurrences", ascending=False)
+
+plt.figure(figsize=(15,8))
+sns.barplot(data = X_rem_df_sorted.head(30), x="token", y="occurrences", color="blue")
+plt.title('Total Count of Tokenized Words')
+plt.xticks(rotation=90)
+plt.show()
+
+# Split the remainder subset into train and validation sets
+X_train, X_val, y_train, y_val = train_test_split(X_rem,
+                                                 y_rem,
+                                                 test_size=0.3,
+                                                  stratify=y_rem,
+                                                 random_state=42)
+# Check shapes
+print(X_train.shape, X_val.shape, y_train.shape, y_val.shape)
+
+
+#### Scaling Data
+# Instantiate Scaler
+scaler = MinMaxScaler()
+
+# Fit to X_train and transform
+X_train_scaled = scaler.fit_transform(X_train)
+
+# Transform other subsets
+X_val_scaled = scaler.transform(X_val)
+X_test_scaled = scaler.transform(X_test)
+
+
+
