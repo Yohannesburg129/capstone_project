@@ -419,3 +419,128 @@ print(f"Validation accuracy: {round(log_reg1_val_acc,4)}")
 
 
 #### Hyperparameter Optimization
+# Values of C to iterate over
+C_values = [0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000]
+
+# Empty lists to store accuracy scores
+train_acc = []
+val_acc = []
+
+# Loop model iteration across all C-values
+for C in C_values:
+    logit_C = LogisticRegression(random_state=42, max_iter=3000, C=C).fit(X_train_scaled, y_train)
+    train_acc.append(logit_C.score(X_train_scaled, y_train))
+    val_acc.append(logit_C.score(X_val_scaled, y_val))
+    print(f"C={C} completed")
+    
+# Visualize accuracy scores across C-values
+plt.figure(figsize=(10,6))
+plt.plot(C_values, train_acc, marker='o', label='Train data')
+plt.plot(C_values, val_acc, marker='o', label='Validation data')
+plt.xscale('log')
+plt.xlabel('Values for C (Regularization Strength)')
+plt.ylabel('Accuracy')
+plt.legend()
+plt.title('Model Accuracy with Different Regularization Strengths')
+plt.grid()
+
+plt.show()
+
+# Instantiate model
+log_reg2 = LogisticRegression(random_state=42, max_iter=3000, C=0.1).fit(X_train_scaled, y_train)
+
+# Score model against data subsets
+log_reg2_train_acc = log_reg2.score(X_train_scaled, y_train)
+log_reg2_val_acc = log_reg2.score(X_val_scaled, y_val)
+log_reg2_test_acc = log_reg2.score(X_test_scaled, y_test)
+
+print(f"Train Accuracy: {round(log_reg2_train_acc,4)*100}%")
+print(f"Validation Accuracy: {round(log_reg2_val_acc,4)*100}%")
+print(f"Test Accuracy: {round(log_reg2_test_acc,4)*100}%")
+
+# Model predictions on test data
+y_pred = log_reg2.predict(X_test_scaled)
+
+# Call confusion matrix
+plot_confusion_matrix(log_reg2, X_test_scaled, y_test, cmap='viridis')
+
+print(classification_report(y_test, y_pred))
+
+
+##### Logistic Regression - PCA
+# Instantiate PCA model
+pca_method = PCA()
+
+# Fit PCA to scaled data
+pca_method.fit(X_train_scaled)
+
+explained_variance = pca_method.explained_variance_ratio_
+
+# Plot the figure
+plt.figure(figsize=(12,7))
+
+plt.plot(range(1, len(explained_variance)+1), explained_variance.cumsum(), marker='.')
+plt.axhline(0.8, color='black', linestyle='--')
+plt.axvline(700, color='black', linestyle='--')
+plt.xlabel('Number of Principal Components')
+plt.ylabel('Cumulative Explained Variance')
+plt.title('Plotting Cumulative Explained Variance by Principal Components')
+
+plt.show()
+
+# Fit the new PCA parameter
+pca_method = PCA(n_components=0.8)
+
+pca_method.fit(X_train_scaled)
+
+# Transform each data subset
+X_train_pca = pca_method.transform(X_train_scaled)
+X_val_pca = pca_method.transform(X_val_scaled)
+X_test_pca = pca_method.transform(X_test_scaled)
+pca_method.n_components_
+
+# Values of C to iterate over
+C_values = [0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000]
+
+# Empty lists to store accuracy scores
+train_acc_pca = []
+val_acc_pca = []
+
+# Loop model iteration across all C-values
+for C in C_values:
+    logit_C = LogisticRegression(random_state=42, max_iter=3000, C=C).fit(X_train_pca, y_train)
+    train_acc_pca.append(logit_C.score(X_train_pca, y_train))
+    val_acc_pca.append(logit_C.score(X_val_pca, y_val))
+    print(f"C={C} completed")
+    
+# Visualize accuracy scores across C-values
+plt.figure(figsize=(10,6))
+plt.plot(C_values, train_acc_pca, marker='o', label='Train data')
+plt.plot(C_values, val_acc_pca, marker='o', label='Validation data')
+plt.xscale('log')
+plt.xlabel('Values for C (Regularization Strength)')
+plt.ylabel('Accuracy')
+plt.legend()
+plt.title('Model Accuracy with Different Regularization Strengths')
+plt.grid()
+
+plt.show()
+
+# Instantiate model
+log_reg3 = LogisticRegression(random_state=42, max_iter=3000, C=0.1).fit(X_train_pca, y_train)
+
+# Score model against data subsets
+log_reg3_train_acc = log_reg3.score(X_train_pca, y_train)
+log_reg3_val_acc = log_reg3.score(X_val_pca, y_val)
+log_reg3_test_acc = log_reg3.score(X_test_pca, y_test)
+
+print(f"Train Accuracy: {round(log_reg3_train_acc,4)*100}%")
+print(f"Validation Accuracy: {round(log_reg3_val_acc,4)*100}%")
+print(f"Test Accuracy: {round(log_reg3_test_acc,4)*100}%")
+
+pd.DataFrame({'3911 Dimensions': [log_reg2_train_acc, log_reg2_val_acc, log_reg2_test_acc],
+                 '710 Dimensions': [log_reg3_train_acc, log_reg3_val_acc, log_reg3_test_acc]},
+            index = ['Train Accuracy', 'Validation Accuracy', 'Test Accuracy'])
+
+
+
