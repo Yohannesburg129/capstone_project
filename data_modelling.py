@@ -115,3 +115,51 @@ me_airlines.drop(columns='traveller_type', inplace=True)
 # Check
 me_airlines.head(2)
 
+
+#### `cabin`
+# Fit the OneHotEncoder to the bookings column and transform
+me_cabin_df = pd.DataFrame(me_airlines['cabin'])
+ohe_me_cabin_df = ohe.fit_transform(me_cabin_df)
+
+ohe_me_cabin_df
+
+# Convert the sparse matrix to a dense matrix
+ohe_me_cabin_dense = ohe_me_cabin_df.toarray()
+
+me_cabin_df = pd.DataFrame(ohe_me_cabin_dense, columns=ohe.categories_[0]).astype('int')
+
+# Inspect
+me_cabin_df.head()
+
+me_airlines = pd.concat([me_airlines, me_cabin_df.set_index(me_airlines.index)], axis=1)
+
+# Drop old cabin column
+me_airlines.drop(columns='cabin', inplace=True)
+
+# Check
+me_airlines.head()
+
+
+#### `origin`
+# Fit the OneHotEncoder to the bookings column and transform
+me_origin_df = pd.DataFrame(me_airlines['origin'])
+ohe_me_origin_df = ohe.fit_transform(me_origin_df)
+
+ohe_me_origin_df
+
+# Convert the sparse matrix to a dense matrix
+ohe_me_origin_dense = ohe_me_origin_df.toarray()
+
+me_origin_df = pd.DataFrame(ohe_me_origin_dense, columns=ohe.categories_[0]).astype('int')
+
+# Inspect
+me_origin_df.head()
+me_airlines = pd.concat([me_airlines, me_origin_df.set_index(me_airlines.index)], axis=1)
+
+# Drop old cabin column
+me_airlines.drop(columns='origin', inplace=True)
+
+# Check
+me_airlines.head()
+
+
