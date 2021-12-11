@@ -163,3 +163,137 @@ me_airlines.drop(columns='origin', inplace=True)
 me_airlines.head()
 
 
+#### `destination`
+# Fit the OneHotEncoder to the bookings column and transform
+me_destination_df = pd.DataFrame(me_airlines['destination'])
+ohe_me_destination_df = ohe.fit_transform(me_destination_df)
+
+ohe_me_destination_df
+# Convert the sparse matrix to a dense matrix
+ohe_me_destination_dense = ohe_me_destination_df.toarray()
+
+me_destination_df = pd.DataFrame(ohe_me_destination_dense, columns=ohe.categories_[0]).astype('int')
+
+# Inspect
+me_destination_df.head()
+
+me_airlines = pd.concat([me_airlines, me_destination_df.set_index(me_airlines.index)], axis=1)
+
+# Drop old cabin column
+me_airlines.drop(columns='destination', inplace=True)
+
+# Check
+me_airlines.head()
+me_airlines.shape
+
+
+##### `CountVectorizer()`
+X1 = me_airlines['customer_review']
+y1 = me_airlines['recommended']
+
+# Perform a train-test split
+X1_train, X1_test, y1_train, y1_test = train_test_split(X1, y1, 
+                                                    test_size=0.33, 
+                                                    stratify=y1,
+                                                    random_state=42)
+
+bagofwords_count = CountVectorizer(stop_words="english")
+bagofwords_count.fit(X1_train)
+
+X1_train_transformed = bagofwords_count.transform(X1_train) 
+X1_test_transformed = bagofwords_count.transform(X1_test) 
+
+X1_train_transformed.shape
+
+words = bagofwords_count.get_feature_names()
+word_counts = X1_train_transformed.toarray().sum(axis=0)
+
+# Fitting a model
+logreg = LogisticRegression(C = 0.1)
+logreg.fit(X1_train_transformed, y1_train)
+
+# Training and test score
+print(f"Train score: {logreg.score(X1_train_transformed, y1_train)}")
+print(f"Test score: {logreg.score(X1_test_transformed, y1_test)}")
+
+def plot_coefs(logreg, words):
+    coef_df = pd.DataFrame({"coefficient": logreg.coef_[0], "token": words})
+    coef_df = coef_df.sort_values("coefficient", ascending=False)
+
+    fig, axs = plt.subplots(2, 1, figsize=(10, 8))
+
+    # smallest coefficient -> tokens indicating negative sentiment 
+    coef_df.tail(20).set_index("token").plot(kind="bar", rot=45, ax=axs[0], color="red")
+    axs[0].set_title("Negative indicators")
+ 
+    
+    # largest coefficient -> tokens indicating positive sentiment 
+    coef_df.head(20).set_index("token").plot(kind="bar", rot=45, ax=axs[1], color="blue")
+    axs[1].set_title("Positive indicators")
+    
+    
+    sns.despine()
+    plt.tight_layout()
+    plt.show()
+    
+plot_coefs(logreg, words)
+
+# Create the coefficients dataframe
+coef_df = pd.DataFrame({"coefficient": logreg.coef_[0], "token": words})
+coef_df = coef_df.sort_values("coefficient", ascending=False)
+
+# Create dataframes for the top 20 positive/negative words
+coef_df_pos = coef_df.head(20)
+coef_df_neg = coef_df.tail(20)
+
+
+##### `TfidfVectorizer()`
+bagofwords_tfidf = TfidfVectorizer(stop_words="english")
+bagofwords_tfidf.fit(X1_train)
+
+X1_train_transformed = bagofwords_tfidf.transform(X1_train) 
+X1_test_transformed = bagofwords_tfidf.transform(X1_test) 
+
+X1_train_transformed.shape
+
+words_tfidf = bagofwords_tfidf.get_feature_names()
+word_counts_tfidf = X1_train_transformed.toarray().sum(axis=0)
+
+# Fitting a model
+logreg_tfidf = LogisticRegression(C = 0.1)
+logreg_tfidf.fit(X1_train_transformed, y1_train)
+
+# Training and test score
+print(f"Train score: {logreg_tfidf.score(X1_train_transformed, y1_train)}")
+print(f"Test score: {logreg_tfidf.score(X1_test_transformed, y1_test)}")
+
+def plot_coefs_tfidf(logreg_tfidf, words_tfidf):
+    coef_df_tfidf = pd.DataFrame({"coefficient": logreg_tfidf.coef_[0], "token": words_tfidf})
+    coef_df_tfidf = coef_df_tfidf.sort_values("coefficient", ascending=False)
+
+    fig, axs = plt.subplots(2, 1, figsize=(10, 8))
+
+    # smallest coefficient -> tokens indicating negative sentiment 
+    coef_df_tfidf.tail(20).set_index("token").plot(kind="bar", rot=45, ax=axs[0], color="red")
+    axs[0].set_title("Negative indicators")
+ 
+    
+    # largest coefficient -> tokens indicating positive sentiment 
+    coef_df_tfidf.head(20).set_index("token").plot(kind="bar", rot=45, ax=axs[1], color="blue")
+    axs[1].set_title("Positive indicators")
+    
+    
+    sns.despine()
+    plt.tight_layout()
+    plt.show()
+    
+plot_coefs_tfidf(logreg_tfidf, words_tfidf)
+
+# Create a dataframe for the positive/negative sentiment words 
+# Tfidf
+coef_df_tfidf = pd.DataFrame({"coefficient": logreg_tfidf.coef_[0], "token": words_tfidf})
+coef_df_tfidf = coef_df_tfidf.sort_values("coefficient", ascending=False)
+
+# Create dataframes for the top 20 positive/negative words
+tfidf_df_pos = coef_df_tfidf.head(20)
+tfidf_df_neg = coef_df_tfidf.tail(20)
