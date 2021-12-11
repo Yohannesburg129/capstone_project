@@ -399,4 +399,23 @@ X_val_scaled = scaler.transform(X_val)
 X_test_scaled = scaler.transform(X_test)
 
 
+### 4. Modelling
+#### Model 4.1 - Logistic Regression
 
+# Check default solver
+log_reg1 = LogisticRegression(random_state=42)
+
+log_reg1.solver
+
+# Instantiate and fit basic Logistic Regression model
+log_reg1.fit(X_train_scaled, y_train)
+
+# Model performance with train and validation data
+log_reg1_train_acc = log_reg1.score(X_train_scaled, y_train)
+log_reg1_val_acc = log_reg1.score(X_val_scaled, y_val)
+
+print(f"Train accuracy: {round(log_reg1_train_acc,4)}")
+print(f"Validation accuracy: {round(log_reg1_val_acc,4)}")
+
+
+#### Hyperparameter Optimization
