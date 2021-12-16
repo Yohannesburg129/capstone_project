@@ -6,6 +6,7 @@ The focus of this project was to use Natural Language Processing to predict whet
 
 The capstone_project folder contains the following:
 
+- 1 Business Summary Report
 - 1 readme file 
 - Part 1 - Data Cleaning & Preprocessing contains the entire data cleaning and preprocessing process before conducting EDA on the dataset.
 - Part 2 EDA contains the entire data analysis process of the project
