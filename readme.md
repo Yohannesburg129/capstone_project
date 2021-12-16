@@ -7,6 +7,6 @@ The focus of this project was to use Natural Language Processing to predict whet
 The capstone_project folder contains the following:
 
 - 1 readme file 
-- data_cleaning.py file. This file contains the entire data cleaning and preprocessing process before conducting EDA on the dataset.
-- data_analysis.py file. This file contains the entire data analysis process of the project
-- data_modelling.py file. This file contains the entire feature engineering and modelling process and findings of the project. 
+- Part 1 - Data Cleaning & Preprocessing contains the entire data cleaning and preprocessing process before conducting EDA on the dataset.
+- Part 2 EDA contains the entire data analysis process of the project
+- pART 3 Feature Engineering & Modelling contains the entire feature engineering and modelling process and findings of the project. 
