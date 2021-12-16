@@ -9,4 +9,4 @@ The capstone_project folder contains the following:
 - 1 readme file 
 - Part 1 - Data Cleaning & Preprocessing contains the entire data cleaning and preprocessing process before conducting EDA on the dataset.
 - Part 2 EDA contains the entire data analysis process of the project
-- pART 3 Feature Engineering & Modelling contains the entire feature engineering and modelling process and findings of the project. 
+- Part 3 Feature Engineering & Modelling contains the entire feature engineering and modelling process and findings of the project. 
